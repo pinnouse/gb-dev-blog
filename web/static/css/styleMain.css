@@ -1,0 +1,52 @@
+body {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  background-color: #faf6ef;
+  color: #4e4e4e;
+}
+
+@keyframes slideIn {
+  0% { top: 100px; }
+  100% { top: 0 }
+}
+
+div#posts {
+  position: relative;
+  width: 40%;
+  margin: 48px auto;
+}
+
+div.card {
+  display: block;
+  position: relative;
+  width: 80%;
+  padding: 48px 5%;
+  margin: 48px auto;
+  opacity: 0.87;
+  background-color: #ffffff;
+  box-shadow: 2px 3px 13px 4px rgba(71, 71, 71, 0.124);
+  transition: opacity 230ms, padding 230ms, box-shadow 230ms;
+}
+
+div.card:hover {
+  opacity: 1;
+  padding: 48px 9%;
+  box-shadow: 3px 8px 13px 6px rgba(71, 71, 71, 0.224);
+}
+
+div[data-post] {
+  cursor: pointer;
+}
+
+div.card h2 {
+  font-size: 22pt;
+  margin: 0;
+}
+
+div.card span.date {
+  font-size: 10pt;
+}
+
+div.card img {
+  width: 100%;
+  margin: 14px 0;
+}

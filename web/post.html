@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>GnowBros DevBlog | {{.Title}}</title>
+    <link rel="stylesheet" href="../static/css/stylePosts.css" type="text/css" />
+  </head>
+  <body>
+    <div class="container">
+      <span class="back" onclick="window.location='../'">back</span>
+      <h1>{{.Title}}</h1>
+      <span class="date">{{.Date.Format "2 Jan 2006 15:04"}}</span>
+      <img src="{{.ImageURL}}" />
+      <div class="content">
+        {{.Content}}
+      </div>
+    </div>
+  </body>
+</html>
