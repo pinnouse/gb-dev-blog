@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"fmt"
 	"encoding/json"
+	"google.golang.org/appengine"
 )
 
 // configuration : configuration for behind the scenes information
@@ -48,4 +49,5 @@ func main() {
 		getPosts(db)
 		serve(int(config["port"].(float64)))
 	}
+	appengine.Main()
 }
