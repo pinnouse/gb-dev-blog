@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"io/ioutil"
 	"html/template"
-	"google.golang.org/appengine"
 )
 
 // HomePage : home page information; most notably posts, maybe more later
@@ -85,6 +84,5 @@ func serve(port int) {
 	http.HandleFunc("/post/", postHandler)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("web/static"))))
 	
-	appengine.Main()
 	//log.Fatal(http.ListenAndServe(":"+strconv.Itoa(port), nil))
 }
