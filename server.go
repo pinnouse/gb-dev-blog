@@ -3,7 +3,7 @@ package main
 import (
 	"strconv"
 	"fmt"
-	//"log"
+	"log"
 	"net/http"
 	"io/ioutil"
 	"html/template"
@@ -84,5 +84,5 @@ func serve(port int) {
 	http.HandleFunc("/post/", postHandler)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("web/static"))))
 	
-	//log.Fatal(http.ListenAndServe(":"+strconv.Itoa(port), nil))
+	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(port), nil))
 }
