@@ -47,7 +47,7 @@ func main() {
 	tableExists := checkTable(db)
 	if tableExists {
 		getPosts(db)
-		serve(int(config["port"].(float64)))
-		appengine.Main()
 	}
+	serve(int(config["port"].(float64)))
+	appengine.Main()
 }
