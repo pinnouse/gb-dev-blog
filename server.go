@@ -1,18 +1,24 @@
 package main
 
 import (
-	"strconv"
 	"fmt"
+	"html/template"
+	"io/ioutil"
 	"log"
 	"net/http"
-	"io/ioutil"
-	"html/template"
+	"strconv"
+	"strings"
+	"time"
+
+	"github.com/alexedwards/scs"
 )
 
 // HomePage : home page information; most notably posts, maybe more later
 type HomePage struct {
 	Posts []Post `json:"posts"`
 }
+
+var sessionManager *scs.SessionManager
 
 func loadHTML(file string) (string, error) {
 	body, err := ioutil.ReadFile("web/" + file + ".html")
@@ -62,12 +68,46 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	t, err := template.New("post").Parse(page)
-  if err != nil {
+	if err != nil {
 		fmt.Fprintf(w, errPage)
 		return
 	}
 
 	t.Execute(w, post)
+}
+
+func loginHandler(w http.ResponseWriter, r *http.Request) {
+	page, err := loadHTML("login")
+	check(err)
+
+	admin := sessionManager.GetBool(r.Context(), "admin")
+	if admin {
+		http.Redirect(w, r, "../", 302)
+	}
+
+	if r.Method == "GET" {
+		fmt.Fprintf(w, page)
+	}
+
+	if r.Method == "POST" {
+		err := r.ParseForm()
+		check(err)
+
+		d := r.Form
+		fmt.Print(d)
+		pass := strings.Join(d["password"], "")
+		if pass == getConfig()["password"] {
+			fmt.Fprintf(w, "lit")
+
+		} else {
+			fmt.Fprintf(w, "not lit")
+		}
+	}
+
+}
+
+func newPostHandler(w http.ResponseWriter, r *http.Request) {
+
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -78,11 +118,18 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func serve(port int) {
+	sessionManager = scs.New()
+	sessionManager.Lifetime = 24 * time.Hour
+
 	fmt.Printf("Serving on port %d ", port)
 
-	http.HandleFunc("/", allPostsHandler)
-	http.HandleFunc("/post/", postHandler)
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("web/static"))))
-	
-	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(port), nil))
+	mux := http.NewServeMux()
+
+	mux.HandleFunc("/", allPostsHandler)
+	mux.HandleFunc("/post/", postHandler)
+	mux.HandleFunc("/login/", loginHandler)
+	mux.HandleFunc("/newPost/", newPostHandler)
+	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("web/static"))))
+
+	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(port), sessionManager.LoadAndSave(mux)))
 }

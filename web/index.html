@@ -4,23 +4,23 @@
   <head>
     <title>GnowBros DevBlog</title>
     <link rel="stylesheet" href="static/css/styleMain.css" type="text/css" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    <script src="static/js/main.js"></script>
   </head>
   <body>
     <div id="posts">
       <h1>Recent Posts</h1>
       {{range .Posts}}
-        <div class="card" data-post="{{.ID}}">
+      <div class="card" data-post="{{.ID}}">
           <h2>{{.Title}}</h2>
           <span class="date">{{.Date.Format "2 Jan 2006 15:04"}}</span>
           <img src="{{.ImageURL}}" />
           <div class="content">{{.Content}}</div>
         </div>
-      {{end}}
-      <footer>Copyright &COPY; 2019 Nicholas Wong</footer>
-    </div>
+        {{end}}
+        <footer>Copyright &COPY; 2019 Nicholas Wong</footer>
+      </div>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+      <script src="static/js/main.js"></script>
   </body>
 </html>

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 	"database/sql"
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/lib/pq"
 )
 
 var posts []Post
@@ -27,10 +27,10 @@ func checkTable(db *sql.DB) bool {
 	}
 
 	_, err = db.Exec(`CREATE TABLE posts ( 
-		id integer NOT NULL AUTO_INCREMENT PRIMARY KEY,
+		id SERIAL PRIMARY KEY,
 		title varchar(255),
 		imageURL varchar(255),
-		date datetime,
+		date timestamp,
 		content text)`)
 	if err != nil {
 		panic(err)
@@ -41,7 +41,7 @@ func checkTable(db *sql.DB) bool {
 }
 
 func connect(username string, password string, dbURL string) (*sql.DB, error) {
-	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s)/postsdb?parseTime=true", username, password, dbURL))
+	db, err := sql.Open("postgres", fmt.Sprintf("postgres://%s:%s@%s/postsdb?sslmode=disable", username, password, dbURL))
 	if err != nil {
 		panic(err)
 	}
