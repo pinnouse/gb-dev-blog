@@ -12,3 +12,6 @@
 *.out
 
 config.json
+
+*.crt
+*.key

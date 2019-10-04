@@ -160,5 +160,5 @@ func serve(port int, db *sql.DB) {
 	})
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("web/static"))))
 
-	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(port), sessionManager.LoadAndSave(mux)))
+	log.Fatal(http.ListenAndServeTLS(":443", "server.crt", "server.key", sessionManager.LoadAndSave(mux)))
 }
