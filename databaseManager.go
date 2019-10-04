@@ -1,9 +1,11 @@
 package main
 
 import (
-	"fmt"
-	"time"
 	"database/sql"
+	"fmt"
+	"html/template"
+	"time"
+
 	_ "github.com/lib/pq"
 )
 
@@ -11,11 +13,11 @@ var posts []Post
 
 // Post : Post information
 type Post struct {
-	ID int `json:"id"`
-	Title string `json:"title"`
-	ImageURL string `json:"imageURL"`
-	Date time.Time `json:"date"`
-	Content string `json:"content"`
+	ID       int           `json:"id"`
+	Title    string        `json:"title"`
+	ImageURL string        `json:"imageURL"`
+	Date     time.Time     `json:"date"`
+	Content  template.HTML `json:"content"`
 }
 
 func checkTable(db *sql.DB) bool {

@@ -28,9 +28,9 @@ $(() => {
     $(el).css("top", "100px").delay(i * 400).animate({
       top: 0
     }, 700, "easeOutQuad");
-    $(el).click(e => {
-      if (el[i].hasAttribute("data-post")) {
-        window.location = "post/" + el[i].getAttribute("data-post");
+    $(el).click(function() {
+      if ($(el).attr("data-post")) {
+        window.location = "post/" + $(el).attr("data-post");
       }
     });
   })

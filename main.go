@@ -52,6 +52,6 @@ func main() {
 	if tableExists {
 		getPosts(db)
 	}
-	serve(int(config["port"].(float64)))
+	serve(int(config["port"].(float64)), db)
 	//appengine.Main()
 }

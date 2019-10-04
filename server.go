@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"html/template"
 	"io/ioutil"
@@ -77,19 +78,17 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-	page, err := loadHTML("login")
-	check(err)
-
 	admin := sessionManager.GetBool(r.Context(), "admin")
 	if admin {
 		http.Redirect(w, r, "../", 302)
 	}
 
+	page, err := loadHTML("login")
+	check(err)
+
 	if r.Method == "GET" {
 		fmt.Fprintf(w, page)
-	}
-
-	if r.Method == "POST" {
+	} else if r.Method == "POST" {
 		err := r.ParseForm()
 		check(err)
 
@@ -106,8 +105,36 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func newPostHandler(w http.ResponseWriter, r *http.Request) {
+func newPostHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+	admin := sessionManager.GetBool(r.Context(), "admin")
+	if admin {
+		http.Redirect(w, r, "../", 302)
+	}
 
+	page, err := loadHTML("newPost")
+	check(err)
+
+	if r.Method == "GET" {
+		fmt.Fprintf(w, page)
+	} else if r.Method == "POST" {
+		err := r.ParseForm()
+		check(err)
+
+		d := r.Form
+		fmt.Print(d)
+		if admin {
+
+			pass := strings.Join(d["password"], "")
+			if pass == getConfig()["password"] {
+				fmt.Fprintf(w, "lit")
+
+			} else {
+				fmt.Fprintf(w, "not lit")
+			}
+
+			//post(db)
+		}
+	}
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -117,7 +144,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, page)
 }
 
-func serve(port int) {
+func serve(port int, db *sql.DB) {
 	sessionManager = scs.New()
 	sessionManager.Lifetime = 24 * time.Hour
 
@@ -128,7 +155,9 @@ func serve(port int) {
 	mux.HandleFunc("/", allPostsHandler)
 	mux.HandleFunc("/post/", postHandler)
 	mux.HandleFunc("/login/", loginHandler)
-	mux.HandleFunc("/newPost/", newPostHandler)
+	mux.HandleFunc("/newPost/", func(w http.ResponseWriter, r *http.Request) {
+		newPostHandler(w, r, db)
+	})
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("web/static"))))
 
 	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(port), sessionManager.LoadAndSave(mux)))
