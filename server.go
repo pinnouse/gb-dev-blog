@@ -148,8 +148,6 @@ func serve(port int, db *sql.DB) {
 	sessionManager = scs.New()
 	sessionManager.Lifetime = 24 * time.Hour
 
-	fmt.Printf("Serving on port %d ", port)
-
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/", allPostsHandler)
@@ -160,5 +158,7 @@ func serve(port int, db *sql.DB) {
 	})
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("web/static"))))
 
-	log.Fatal(http.ListenAndServeTLS(":443", "server.crt", "server.key", sessionManager.LoadAndSave(mux)))
+	fmt.Printf("Setting up port: %d. https://127.0.0.1:%[1]d", port)
+	err := http.ListenAndServeTLS(":443", "cert.pem", "key.pem", sessionManager.LoadAndSave(mux))
+	log.Fatal(err)
 }
