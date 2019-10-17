@@ -30,6 +30,11 @@ func loadHTML(file string) (string, error) {
 }
 
 func allPostsHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		http.NotFound(w, r)
+		return
+	}
+
 	html, err := loadHTML("index")
 	check(err)
 
